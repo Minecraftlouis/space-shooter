@@ -47,10 +47,16 @@ def main():
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LCTRL and len(green_bullets)< max_num_of_bullets:
+                    bullet = pygame.Rect(green_rect.x + green_rect.width, green_rect.y + green_rect.height // 2,10,5)
+                    green_bullets.append(bullet)
                     bullet_fire_sound.play()
                 if event.key == pygame.K_RCTRL and len(blue_bullets)< max_num_of_bullets:
-                    bullet_fire_sound.play()                
+                    bullet = pygame.Rect(blue_rect.x, blue_rect.y + blue_rect.height // 2, 10, 5)
+                    blue_bullets.append(bullet)
+                        
+                    bullet_fire_sound.play()
 
+        print(green_bullets, blue_bullets)
         window_screen.blit(background, (0, 0))
         window_screen.blit(green_ship, (green_rect.x, green_rect.y))
         window_screen.blit(blue_ship, (blue_rect.x, blue_rect.y))
