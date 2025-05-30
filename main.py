@@ -3,13 +3,13 @@ from pygame.locals import *
 import sys
 pygame.init()
 
-#constants
-width= 800
-ship_width= 55
-ship_height= 40
-max_num_of_bullets= 5
+# constants
+width = 800
+ship_width = 55
+ship_height = 40
+max_num_of_bullets = 5
 height = 600
-fps=60
+fps = 60
 
 # colors
 WHITE = (255,255,255)
@@ -17,11 +17,16 @@ BLACK = (0,0,0)
 GREEN = (110,194,54)
 BLUE  = (23,54,235)
 
-#recourses
+# resources
 window_screen=pygame.display.set_mode(size=(width,height))
 background = pygame.transform.scale(pygame.image.load('gallery/sprites/background.png'),(width, height)).convert()
 space_shooter_logo = pygame.image.load('gallery/sprites/space_shooter.png').convert_alpha()
 space_shooter_logo = pygame.transform.scale(space_shooter_logo, (300, 150))
+
+green_ship_img = pygame.transform.rotate(pygame.image.load('gallery/sprites/shipGreen.png'), 270)
+blue_ship_img = pygame.transform.rotate(pygame.image.load('gallery/sprites/shipBlue.png'), 90)
+green_ship = pygame.transform.scale (green_ship_img, (ship_width, ship_height)).convert_alpha()
+blue_ship = pygame.transform.scale(blue_ship_img, (ship_width, ship_height)).convert_alpha()
 bullet_fire_sound = pygame.mixer.Sound('gallery/audio/sfx_fire.ogg')
 pygame.display.set_caption("space shotter")
 
@@ -32,6 +37,7 @@ def main():
 
     green_bullets = []
     blue_bullets = []
+
     while True:
         clock.tick(fps)
         for event in pygame.event.get():
@@ -43,15 +49,13 @@ def main():
                 if event.key == pygame.K_LCTRL and len(green_bullets)< max_num_of_bullets:
                     bullet_fire_sound.play()
                 if event.key == pygame.K_RCTRL and len(blue_bullets)< max_num_of_bullets:
-                    bullet_fire_sound.play() 
-
-                
+                    bullet_fire_sound.play()                
 
         window_screen.blit(background, (0, 0))
+        window_screen.blit(green_ship, (green_rect.x, green_rect.y))
+        window_screen.blit(blue_ship, (blue_rect.x, blue_rect.y))
+
         pygame.display.update()
-
-
-
 
 def welcome_screen():
     while True:
