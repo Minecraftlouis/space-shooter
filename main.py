@@ -8,6 +8,7 @@ width = 800
 ship_width = 55
 ship_height = 40
 max_num_of_bullets = 5
+bullet_velocity = 7
 height = 600
 fps = 60
 
@@ -29,6 +30,15 @@ green_ship = pygame.transform.scale (green_ship_img, (ship_width, ship_height)).
 blue_ship = pygame.transform.scale(blue_ship_img, (ship_width, ship_height)).convert_alpha()
 bullet_fire_sound = pygame.mixer.Sound('gallery/audio/sfx_fire.ogg')
 pygame.display.set_caption("space shotter")
+def handle_bullets(green_bullets, blue_bullets, GREEN, BLUE):
+    for bullet in green_bullets:
+        bullet.x += bullet_velocity
+        if BLUE.colliderect(bullet):
+            green_bullets.remove(bullet)
+        elif bullet.x > width:
+            green_bullets.remove(bullet)
+            
+                
 
 def main():
     clock = pygame.time.Clock()
@@ -60,6 +70,10 @@ def main():
         window_screen.blit(background, (0, 0))
         window_screen.blit(green_ship, (green_rect.x, green_rect.y))
         window_screen.blit(blue_ship, (blue_rect.x, blue_rect.y))
+        for bullet in green_bullets:
+            pygame.draw.rect(window_screen, GREEN, bullet)
+        for bullet in blue_bullets:
+            pygame.draw.rect(window_screen, BLUE, bullet)
 
         pygame.display.update()
 
