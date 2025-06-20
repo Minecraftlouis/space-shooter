@@ -11,12 +11,14 @@ max_num_of_bullets = 5
 bullet_velocity = 7
 height = 600
 fps = 60
+border = pygame.Rect((width // 2)- 5, 0, 10, height)
 
 # colors
 WHITE = (255,255,255)
 BLACK = (0,0,0)
 GREEN = (110,194,54)
 BLUE  = (23,54,235)
+
 
 # resources
 window_screen=pygame.display.set_mode(size=(width,height))
@@ -71,10 +73,13 @@ def main():
                     blue_bullets.append(bullet)
                         
                     bullet_fire_sound.play()
-
+                
+        keys_pressed = pygame.key.get_pressed()
+        print(keys_pressed[pygame.K_LEFT], keys_pressed[pygame.K_RIGHT])
         print(green_bullets, blue_bullets)
         handle_bullets(green_bullets, blue_bullets, green_rect, blue_rect)
         window_screen.blit(background, (0, 0))
+        pygame.draw.rect(window_screen, WHITE, border)
         window_screen.blit(green_ship, (green_rect.x, green_rect.y))
         window_screen.blit(blue_ship, (blue_rect.x, blue_rect.y))
         for bullet in green_bullets:
