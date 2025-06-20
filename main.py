@@ -29,16 +29,22 @@ blue_ship_img = pygame.transform.rotate(pygame.image.load('gallery/sprites/shipB
 green_ship = pygame.transform.scale (green_ship_img, (ship_width, ship_height)).convert_alpha()
 blue_ship = pygame.transform.scale(blue_ship_img, (ship_width, ship_height)).convert_alpha()
 bullet_fire_sound = pygame.mixer.Sound('gallery/audio/sfx_fire.ogg')
+
 pygame.display.set_caption("space shotter")
-def handle_bullets(green_bullets, blue_bullets, GREEN, BLUE):
+
+def handle_bullets(green_bullets, blue_bullets, green_rect, blue_rect):
     for bullet in green_bullets:
         bullet.x += bullet_velocity
-        if BLUE.colliderect(bullet):
+        if blue_rect.colliderect(bullet):
             green_bullets.remove(bullet)
         elif bullet.x > width:
             green_bullets.remove(bullet)
-            
-                
+    for bullet in blue_bullets:
+        bullet.x -= bullet_velocity
+        if green_rect.colliderect(bullet):
+            blue_bullets.remove(bullet)
+        elif bullet.x < 0:
+            blue_bullets.remove(bullet)
 
 def main():
     clock = pygame.time.Clock()
@@ -67,6 +73,7 @@ def main():
                     bullet_fire_sound.play()
 
         print(green_bullets, blue_bullets)
+        handle_bullets(green_bullets, blue_bullets, green_rect, blue_rect)
         window_screen.blit(background, (0, 0))
         window_screen.blit(green_ship, (green_rect.x, green_rect.y))
         window_screen.blit(blue_ship, (blue_rect.x, blue_rect.y))
