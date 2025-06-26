@@ -11,6 +11,7 @@ max_num_of_bullets = 5
 bullet_velocity = 7
 height = 600
 fps = 60
+ship_velocity = 5
 border = pygame.Rect((width // 2)- 5, 0, 10, height)
 
 # colors
@@ -47,6 +48,29 @@ def handle_bullets(green_bullets, blue_bullets, green_rect, blue_rect):
             blue_bullets.remove(bullet)
         elif bullet.x < 0:
             blue_bullets.remove(bullet)
+            
+def blue_movement_handler(keys_pressed, blue_ship):
+    if keys_pressed[pygame.K_LEFT] and blue_ship.y - ship_velocity > 0:
+        blue_ship.y -= ship_velocity
+    if keys_pressed[pygame.K_RIGHT] and blue_ship.x - ship_velocity > -5:
+        blue_ship.x -= ship_velocity
+    if keys_pressed[pygame.K_UP] and blue_ship.y - ship_velocity +    blue_ship.height < height - 5:
+        blue_ship.y += ship_velocity
+    if keys_pressed[pygame.K_DOWN] and blue_ship.x - ship_velocity + blue_ship.width < border.x -5:
+        blue_ship.x += ship_velocity
+        
+            
+            
+def green_movement_handler(keys_pressed, green_ship):
+    if keys_pressed[pygame.K_w] and green_ship.y - ship_velocity > 0:
+        green_ship.y -= ship_velocity
+    if keys_pressed[pygame.K_a] and green_ship.x - ship_velocity > -5:
+        green_ship.x -= ship_velocity
+    if keys_pressed[pygame.K_s] and green_ship.y - ship_velocity +    green_ship.height < height - 5:
+        green_ship.y += ship_velocity
+    if keys_pressed[pygame.K_d] and green_ship.x - ship_velocity + green_ship.width < border.x -5:
+        green_ship.x += ship_velocity
+        
 
 def main():
     clock = pygame.time.Clock()
@@ -77,6 +101,8 @@ def main():
         keys_pressed = pygame.key.get_pressed()
         print(keys_pressed[pygame.K_LEFT], keys_pressed[pygame.K_RIGHT])
         print(green_bullets, blue_bullets)
+        green_movement_handler(keys_pressed, green_rect)
+        blue_movement_handler(keys_pressed, blue_rect)
         handle_bullets(green_bullets, blue_bullets, green_rect, blue_rect)
         window_screen.blit(background, (0, 0))
         pygame.draw.rect(window_screen, WHITE, border)
