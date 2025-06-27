@@ -50,14 +50,14 @@ def handle_bullets(green_bullets, blue_bullets, green_rect, blue_rect):
             blue_bullets.remove(bullet)
             
 def blue_movement_handler(keys_pressed, blue_ship):
-    if keys_pressed[pygame.K_LEFT] and blue_ship.y - ship_velocity > 0:
-        blue_ship.y -= ship_velocity
-    if keys_pressed[pygame.K_RIGHT] and blue_ship.x - ship_velocity > -5:
+    if keys_pressed[pygame.K_LEFT] and blue_ship.x - ship_velocity > border.x + border.width -5:
         blue_ship.x -= ship_velocity
-    if keys_pressed[pygame.K_UP] and blue_ship.y - ship_velocity +    blue_ship.height < height - 5:
-        blue_ship.y += ship_velocity
-    if keys_pressed[pygame.K_DOWN] and blue_ship.x - ship_velocity + blue_ship.width < border.x -5:
+    if keys_pressed[pygame.K_RIGHT] and blue_ship.x - ship_velocity + blue_ship.width < width - 5:
         blue_ship.x += ship_velocity
+    if keys_pressed[pygame.K_UP] and blue_ship.y - ship_velocity > 0:
+        blue_ship.y -= ship_velocity
+    if keys_pressed[pygame.K_DOWN] and blue_ship.y - ship_velocity + blue_ship.height < height - 5:
+        blue_ship.y += ship_velocity
         
             
             
@@ -70,6 +70,8 @@ def green_movement_handler(keys_pressed, green_ship):
         green_ship.y += ship_velocity
     if keys_pressed[pygame.K_d] and green_ship.x - ship_velocity + green_ship.width < border.x -5:
         green_ship.x += ship_velocity
+        
+        
         
 
 def main():
