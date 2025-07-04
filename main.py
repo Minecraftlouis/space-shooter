@@ -119,6 +119,7 @@ def main():
                     
         keys_pressed = pygame.key.get_pressed()
         print(keys_pressed[pygame.K_LEFT], keys_pressed[pygame.K_RIGHT])
+        print(green_health, blue_health)
         print(green_bullets, blue_bullets)
         green_movement_handler(keys_pressed, green_rect)
         blue_movement_handler(keys_pressed, blue_rect)
