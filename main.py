@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 import sys
+
 pygame.init()
 
 # constants
@@ -12,6 +13,8 @@ bullet_velocity = 7
 height = 600
 fps = 60
 ship_velocity = 5
+green_hit = pygame.USEREVENT + 1
+blue_hit = pygame.USEREVENT + 2
 border = pygame.Rect((width // 2)- 5, 0, 10, height)
 
 # colors
@@ -32,6 +35,7 @@ blue_ship_img = pygame.transform.rotate(pygame.image.load('gallery/sprites/shipB
 green_ship = pygame.transform.scale (green_ship_img, (ship_width, ship_height)).convert_alpha()
 blue_ship = pygame.transform.scale(blue_ship_img, (ship_width, ship_height)).convert_alpha()
 bullet_fire_sound = pygame.mixer.Sound('gallery/audio/sfx_fire.ogg')
+bullet_hit_sound = pygame.mixer.Sound('gallery/audio/sfx_hit.ogg')
 
 pygame.display.set_caption("space shotter")
 
@@ -39,12 +43,14 @@ def handle_bullets(green_bullets, blue_bullets, green_rect, blue_rect):
     for bullet in green_bullets:
         bullet.x += bullet_velocity
         if blue_rect.colliderect(bullet):
+            pygame.event.post(pygame.event.Event(blue_hit))
             green_bullets.remove(bullet)
         elif bullet.x > width:
             green_bullets.remove(bullet)
     for bullet in blue_bullets:
         bullet.x -= bullet_velocity
         if green_rect.colliderect(bullet):
+            pygame.event.post(pygame.event.Event(green_hit))
             blue_bullets.remove(bullet)
         elif bullet.x < 0:
             blue_bullets.remove(bullet)
@@ -74,13 +80,15 @@ def green_movement_handler(keys_pressed, green_ship):
         
         
 
-def main():
+def main(): 
     clock = pygame.time.Clock()
     green_rect = pygame.Rect(100, 100, ship_width, ship_height)
     blue_rect = pygame.Rect(700, 300, ship_width, ship_height)
 
     green_bullets = []
     blue_bullets = []
+    green_health = 10
+    blue_health = 10
 
     while True:
         clock.tick(fps)
@@ -99,7 +107,16 @@ def main():
                     blue_bullets.append(bullet)
                         
                     bullet_fire_sound.play()
-                
+                    
+            #health changes
+            if event.type == green_hit:
+                    green_health -= 1
+                    bullet_hit_sound.play()
+                    
+            if event.type == blue_hit:
+                    green_health -= 1
+                    bullet_hit_sound.play()
+                    
         keys_pressed = pygame.key.get_pressed()
         print(keys_pressed[pygame.K_LEFT], keys_pressed[pygame.K_RIGHT])
         print(green_bullets, blue_bullets)
