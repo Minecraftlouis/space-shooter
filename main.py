@@ -114,20 +114,31 @@ def main():
                     bullet_hit_sound.play()
                     
             if event.type == blue_hit:
-                    green_health -= 1
+                    blue_health -= 1
                     bullet_hit_sound.play()
                     
+        # print(keys_pressed[pygame.K_LEFT], keys_pressed[pygame.K_RIGHT])
+        # print(green_health, blue_health)
+        # print(green_bullets, blue_bullets)
+        
+        # handle movements and bullets
         keys_pressed = pygame.key.get_pressed()
-        print(keys_pressed[pygame.K_LEFT], keys_pressed[pygame.K_RIGHT])
-        print(green_health, blue_health)
-        print(green_bullets, blue_bullets)
         green_movement_handler(keys_pressed, green_rect)
         blue_movement_handler(keys_pressed, blue_rect)
         handle_bullets(green_bullets, blue_bullets, green_rect, blue_rect)
+        
+        # rendering stuff
         window_screen.blit(background, (0, 0))
         pygame.draw.rect(window_screen, WHITE, border)
+        
+        #ship health
+        health_font = pygame.font.SysFont("impact", 24)
+        health_text = health_font.render( str(green_health), 1, GREEN)
+        window_screen.blit(health_text, (10,10))
+        
         window_screen.blit(green_ship, (green_rect.x, green_rect.y))
         window_screen.blit(blue_ship, (blue_rect.x, blue_rect.y))
+        
         for bullet in green_bullets:
             pygame.draw.rect(window_screen, GREEN, bullet)
         for bullet in blue_bullets:
