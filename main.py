@@ -136,6 +136,10 @@ def main():
         health_text = health_font.render( str(green_health), 1, GREEN)
         window_screen.blit(health_text, (10,10))
         
+        blue_health_font = pygame.font.SysFont("impact", 24)
+        blue_health_text = blue_health_font.render( str(blue_health), 1, BLUE)
+        window_screen.blit(blue_health_text, (770,10))
+        
         window_screen.blit(green_ship, (green_rect.x, green_rect.y))
         window_screen.blit(blue_ship, (blue_rect.x, blue_rect.y))
         
