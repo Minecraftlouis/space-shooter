@@ -133,11 +133,10 @@ def main():
         
         #ship health
         health_font = pygame.font.SysFont("impact", 24)
-        health_text = health_font.render( str(green_health), 1, GREEN)
-        window_screen.blit(health_text, (10,10))
-        
-        blue_health_font = pygame.font.SysFont("impact", 24)
-        blue_health_text = blue_health_font.render( str(blue_health), 1, BLUE)
+        green_health_text = health_font.render( str(green_health), 1, GREEN)
+        window_screen.blit(green_health_text, (10,10))
+    
+        blue_health_text = health_font.render( str(blue_health), 1, BLUE)
         window_screen.blit(blue_health_text, (770,10))
         
         window_screen.blit(green_ship, (green_rect.x, green_rect.y))
@@ -147,8 +146,17 @@ def main():
             pygame.draw.rect(window_screen, GREEN, bullet)
         for bullet in blue_bullets:
             pygame.draw.rect(window_screen, BLUE, bullet)
+            
+        game_over(green_health,blue_health)
 
         pygame.display.update()
+        
+def game_over(green_health, blue_health):
+    if (green_health < 0):
+        print("GREEN DEAD")
+        
+    if (blue_health < 0):
+        print("BLUE DEAD")        
 
 def welcome_screen():
     while True:
