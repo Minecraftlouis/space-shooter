@@ -12,6 +12,7 @@ max_num_of_bullets = 5
 bullet_velocity = 7
 height = 600
 fps = 60
+paused = False
 ship_velocity = 5
 green_hit = pygame.USEREVENT + 1
 blue_hit = pygame.USEREVENT + 2
@@ -30,6 +31,8 @@ background = pygame.transform.scale(pygame.image.load('gallery/sprites/backgroun
 space_shooter_logo = pygame.image.load('gallery/sprites/space_shooter.png').convert_alpha()
 space_shooter_logo = pygame.transform.scale(space_shooter_logo, (300, 150))
 
+explosion_image = pygame.image.load ('gallery/sprites/do_explosion.png').convert_alpha()
+explosion_image = pygame.transform.scale(explosion_image, (200, 150))
 green_ship_img = pygame.transform.rotate(pygame.image.load('gallery/sprites/shipGreen.png'), 270)
 blue_ship_img = pygame.transform.rotate(pygame.image.load('gallery/sprites/shipBlue.png'), 90)
 green_ship = pygame.transform.scale (green_ship_img, (ship_width, ship_height)).convert_alpha()
@@ -56,31 +59,36 @@ def handle_bullets(green_bullets, blue_bullets, green_rect, blue_rect):
             blue_bullets.remove(bullet)
             
 def blue_movement_handler(keys_pressed, blue_ship):
-    if keys_pressed[pygame.K_LEFT] and blue_ship.x - ship_velocity > border.x + border.width -5:
-        blue_ship.x -= ship_velocity
-    if keys_pressed[pygame.K_RIGHT] and blue_ship.x - ship_velocity + blue_ship.width < width - 5:
-        blue_ship.x += ship_velocity
-    if keys_pressed[pygame.K_UP] and blue_ship.y - ship_velocity > 0:
-        blue_ship.y -= ship_velocity
-    if keys_pressed[pygame.K_DOWN] and blue_ship.y - ship_velocity + blue_ship.height < height - 5:
-        blue_ship.y += ship_velocity
+    global paused
+    if paused == False:
+        if keys_pressed[pygame.K_LEFT] and blue_ship.x - ship_velocity > border.x + border.width -5:
+            blue_ship.x -= ship_velocity
+        if keys_pressed[pygame.K_RIGHT] and blue_ship.x - ship_velocity + blue_ship.width < width - 5:
+            blue_ship.x += ship_velocity
+        if keys_pressed[pygame.K_UP] and blue_ship.y - ship_velocity > 0:
+            blue_ship.y -= ship_velocity
+        if keys_pressed[pygame.K_DOWN] and blue_ship.y - ship_velocity + blue_ship.height < height - 5:
+            blue_ship.y += ship_velocity
         
             
             
 def green_movement_handler(keys_pressed, green_ship):
-    if keys_pressed[pygame.K_w] and green_ship.y - ship_velocity > 0:
-        green_ship.y -= ship_velocity
-    if keys_pressed[pygame.K_a] and green_ship.x - ship_velocity > -5:
-        green_ship.x -= ship_velocity
-    if keys_pressed[pygame.K_s] and green_ship.y - ship_velocity +    green_ship.height < height - 5:
-        green_ship.y += ship_velocity
-    if keys_pressed[pygame.K_d] and green_ship.x - ship_velocity + green_ship.width < border.x -5:
-        green_ship.x += ship_velocity
-        
+    global paused
+    if paused == False:
+        if keys_pressed[pygame.K_w] and green_ship.y - ship_velocity > 0:
+            green_ship.y -= ship_velocity
+        if keys_pressed[pygame.K_a] and green_ship.x - ship_velocity > -5:
+            green_ship.x -= ship_velocity
+        if keys_pressed[pygame.K_s] and green_ship.y - ship_velocity +    green_ship.height < height - 5:
+            green_ship.y += ship_velocity
+        if keys_pressed[pygame.K_d] and green_ship.x - ship_velocity + green_ship.width < border.x -5:
+            green_ship.x += ship_velocity
+            
         
         
 
 def main(): 
+    global paused
     clock = pygame.time.Clock()
     green_rect = pygame.Rect(100, 100, ship_width, ship_height)
     blue_rect = pygame.Rect(700, 300, ship_width, ship_height)
@@ -98,15 +106,18 @@ def main():
                 sys.exit()
 
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LCTRL and len(green_bullets)< max_num_of_bullets:
-                    bullet = pygame.Rect(green_rect.x + green_rect.width, green_rect.y + green_rect.height // 2,10,5)
-                    green_bullets.append(bullet)
-                    bullet_fire_sound.play()
-                if event.key == pygame.K_RCTRL and len(blue_bullets)< max_num_of_bullets:
-                    bullet = pygame.Rect(blue_rect.x, blue_rect.y + blue_rect.height // 2, 10, 5)
-                    blue_bullets.append(bullet)
+                if paused == False:
+                    if event.key == pygame.K_LCTRL and len(green_bullets)< max_num_of_bullets:
+                        bullet = pygame.Rect(green_rect.x + green_rect.width, green_rect.y + green_rect.height // 2,10,5)
+                        green_bullets.append(bullet)
+                        bullet_fire_sound.play()
+                    if event.key == pygame.K_RCTRL and len(blue_bullets)< max_num_of_bullets:
+                        bullet = pygame.Rect(blue_rect.x, blue_rect.y + blue_rect.height // 2, 10, 5)
+                        blue_bullets.append(bullet)                        
+                        bullet_fire_sound.play()
                         
-                    bullet_fire_sound.play()
+                        
+                    
                     
             #health changes
             if event.type == green_hit:
@@ -147,16 +158,21 @@ def main():
         for bullet in blue_bullets:
             pygame.draw.rect(window_screen, BLUE, bullet)
             
-        game_over(green_health,blue_health)
+        game_over(green_health,blue_health,green_rect,blue_rect)
 
         pygame.display.update()
         
-def game_over(green_health, blue_health):
-    if (green_health < 0):
+def game_over(green_health, blue_health,green_rect,blue_rect):
+    global paused
+    if (green_health == 0):
         print("GREEN DEAD")
+        window_screen.blit(explosion_image, (green_rect.x-50,green_rect.y-50))
+        paused = True     
         
-    if (blue_health < 0):
-        print("BLUE DEAD")        
+    if (blue_health == 0):
+        print("BLUE DEAD")
+        window_screen.blit(explosion_image, (blue_rect.x-50,blue_rect.y-50))
+        paused = True       
 
 def welcome_screen():
     while True:
